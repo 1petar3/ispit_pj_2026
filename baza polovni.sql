@@ -1,0 +1,58 @@
+CREATE SCHEMA IF NOT EXISTS polovni_pj_2026
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_0900_ai_ci;
+
+USE polovni_pj_2026;
+
+DROP TABLE IF EXISTS `listing`;
+DROP TABLE IF EXISTS `car`;
+DROP TABLE IF EXISTS `seller`;
+
+CREATE TABLE `seller` (
+  seller_id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(255) NOT NULL,
+  last_name  VARCHAR(255) NOT NULL,
+  email      VARCHAR(255) NOT NULL,
+  phone      VARCHAR(255) NOT NULL,
+  umcn       VARCHAR(255) NOT NULL,
+  tax_id     VARCHAR(255) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NULL DEFAULT NULL,
+  deleted_at DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (seller_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE `car` (
+  car_id INT NOT NULL AUTO_INCREMENT,
+  make VARCHAR(255) NOT NULL,
+  model VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  mileage_km INT NOT NULL,
+  fuel_type VARCHAR(255) NOT NULL,
+  transmission VARCHAR(255) NOT NULL,
+  engine VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NULL DEFAULT NULL,
+  deleted_at DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (car_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE `listing` (
+  listing_id INT NOT NULL AUTO_INCREMENT,
+  uuid VARCHAR(255) NOT NULL,
+  seller_id INT NOT NULL,
+  car_id INT NOT NULL,
+  price_eur INT NOT NULL,
+  city VARCHAR(255) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+  published_at DATETIME NULL DEFAULT NULL,
+  sold_at DATETIME NULL DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NULL DEFAULT NULL,
+  deleted_at DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (listing_id),
+  INDEX idx_listing_seller (seller_id),
+  INDEX idx_listing_car (car_id),
+  CONSTRAINT fk_listing_seller FOREIGN KEY (seller_id) REFERENCES `seller` (seller_id),
+  CONSTRAINT fk_listing_car FOREIGN KEY (car_id) REFERENCES `car` (car_id)
+) ENGINE=InnoDB;car
