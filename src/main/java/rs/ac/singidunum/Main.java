@@ -1,4 +1,4 @@
-package rs.ac.singidnum;
+package rs.ac.singidunum;
 
 
 import org.springframework.boot.SpringApplication;
