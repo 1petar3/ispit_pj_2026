@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ListingRepository extends JpaRepository <Listing, Integer>
 {
-    List<listing> findAllByDeletedAtIsNull();
+    List<Listing> findAllByDeletedAtIsNull();
     Optional<Listing>findByListingIdAndDeletedAtIsNull(Integer listingId);
 }
