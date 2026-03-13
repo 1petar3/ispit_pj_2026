@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izmeni prodavca</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mt-2">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html">PolovniMini</a>
+        </div>
+    </nav>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="/seller.html">Prodavci</a></li>
+            <li class="breadcrumb-item active">Izmeni</li>
+        </ol>
+    </nav>
+
+    <h3>Izmeni prodavca</h3>
+
+    <form id="form">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID:</label>
+            <input type="text" class="form-control" id="id" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Ime:</label>
+            <input type="text" class="form-control" id="firstName">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Prezime:</label>
+            <input type="text" class="form-control" id="lastName">
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Telefon:</label>
+            <input type="text" class="form-control" id="phone">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="text" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+            <label for="umcn" class="form-label">UMCN:</label>
+            <input type="text" class="form-control" id="umcn">
+        </div>
+        <div class="mb-3">
+            <label for="taxId" class="form-label">PIB:</label>
+            <input type="text" class="form-control" id="taxId">
+        </div>
+
+        <button type="submit" class="btn btn-success">Sačuvaj</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/global.js"></script>
+<script>
+    const sellerId = getIdFromQuery()
+
+    axios.get('/api/seller/' + sellerId)
+        .then(rsp => {
+            const seller = rsp.data
+            document.getElementById('id').value = seller.sellerId
+            document.getElementById('firstName').value = seller.firstName
+            document.getElementById('lastName').value = seller.lastName
+            document.getElementById('phone').value = seller.phone
+            document.getElementById('email').value = seller.email
+            document.getElementById('umcn').value = seller.umcn
+            document.getElementById('taxId').value = seller.taxId
+        })
+        .catch(() => alert('Doslo je do greske'))
+
+    document.getElementById('form').addEventListener('submit', e => {
+        e.preventDefault()
+
+        axios.put('/api/seller/' + sellerId, {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            umcn: document.getElementById('umcn').value,
+            taxId: document.getElementById('taxId').value
+        }).then(() => {
+            window.location.href = '/seller.html'
+        }).catch(() => alert('Doslo je do greske'))
+    })
+</script>
+</body>
+</html>
