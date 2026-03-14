@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,40 +14,27 @@
         </div>
     </nav>
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
-            <li class="breadcrumb-item"><a href="/seller.html">Prodavci</a></li>
-            <li class="breadcrumb-item active">Dodaj</li>
-        </ol>
-    </nav>
-
     <h3>Dodaj prodavca</h3>
 
     <form id="form">
         <div class="mb-3">
             <label for="firstName" class="form-label">Ime:</label>
-            <input type="text" class="form-control" id="firstName">
+            <input type="text" class="form-control" id="firstName" required>
         </div>
+
         <div class="mb-3">
             <label for="lastName" class="form-label">Prezime:</label>
-            <input type="text" class="form-control" id="lastName">
+            <input type="text" class="form-control" id="lastName" required>
         </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">Telefon:</label>
-            <input type="text" class="form-control" id="phone">
-        </div>
+
         <div class="mb-3">
             <label for="email" class="form-label">Email:</label>
-            <input type="text" class="form-control" id="email">
+            <input type="email" class="form-control" id="email" required>
         </div>
+
         <div class="mb-3">
-            <label for="umcn" class="form-label">UMCN:</label>
-            <input type="text" class="form-control" id="umcn">
-        </div>
-        <div class="mb-3">
-            <label for="taxId" class="form-label">PIB:</label>
-            <input type="text" class="form-control" id="taxId">
+            <label for="phone" class="form-label">Telefon:</label>
+            <input type="text" class="form-control" id="phone" required>
         </div>
 
         <button type="submit" class="btn btn-success">Sačuvaj</button>
@@ -59,14 +46,33 @@
     document.getElementById('form').addEventListener('submit', e => {
         e.preventDefault()
 
+        const firstName = document.getElementById('firstName').value.trim()
+        const lastName = document.getElementById('lastName').value.trim()
+        const email = document.getElementById('email').value.trim()
+        const phone = document.getElementById('phone').value.trim()
+
+        if (firstName.length < 2) {
+            alert('Ime mora imati najmanje 2 karaktera.')
+            return
+        }
+
+        if (lastName.length < 2) {
+            alert('Prezime mora imati najmanje 2 karaktera.')
+            return
+        }
+
+        if (phone.length < 3) {
+            alert('Telefon nije ispravan.')
+            return
+        }
+
         axios.post('/api/seller', {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value,
-            umcn: document.getElementById('umcn').value,
-            taxId: document.getElementById('taxId').value
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone
         }).then(() => {
+            alert('Prodavac je uspešno sačuvan.')
             window.location.href = '/seller.html'
         }).catch(() => alert('Doslo je do greske'))
     })

@@ -1,26 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prodavci</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 </head>
 <body data-bs-theme="dark">
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mt-2">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 mt-2">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/index.html">PolovniMini</a>
+            <a class="navbar-brand" href="/index.html">
+                <i class="fa-solid fa-car"></i> PolovniMini
+            </a>
+
             <div class="navbar-nav">
-                <a class="nav-link" href="/index.html">Početna</a>
-                <a class="nav-link" href="/list.html">Lista</a>
-                <a class="nav-link active" href="/seller.html">Prodavci</a>
-                <a class="nav-link" href="/car.html">Automobili</a>
+                <a class="nav-link" href="/index.html">
+                    <i class="fa-solid fa-house"></i> Početna
+                </a>
+                <a class="nav-link" href="/list.html">
+                    <i class="fa-solid fa-table-cells"></i> Lista
+                </a>
+                <a class="nav-link active" href="/seller.html">
+                    <i class="fa-solid fa-user"></i> Prodavci
+                </a>
+                <a class="nav-link" href="/car.html">
+                    <i class="fa-solid fa-car-side"></i> Automobili
+                </a>
             </div>
         </div>
     </nav>
 
-    <a href="/new/seller.html" class="btn btn-primary mb-3">Dodaj prodavca</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Prodavci</h3>
+        <a href="/new/seller.html" class="btn btn-primary">Dodaj prodavca</a>
+    </div>
 
     <table class="table table-striped table-hover">
         <thead>
@@ -28,8 +43,8 @@
             <th>ID</th>
             <th>Ime</th>
             <th>Prezime</th>
-            <th>Telefon</th>
             <th>Email</th>
+            <th>Telefon</th>
             <th>Opcije</th>
         </tr>
         </thead>
@@ -42,11 +57,10 @@
         <td class="id"></td>
         <td class="firstName"></td>
         <td class="lastName"></td>
-        <td class="phone"></td>
         <td class="email"></td>
+        <td class="phone"></td>
         <td>
             <a href="#" class="btn btn-sm btn-success edit">Izmeni</a>
-            <button class="btn btn-sm btn-danger delete">Obriši</button>
         </td>
     </tr>
 </template>
@@ -58,26 +72,25 @@
 
     axios.get('/api/seller')
         .then(rsp => {
+            content.innerHTML = ''
+
             rsp.data.forEach(seller => {
                 const copy = template.content.cloneNode(true)
 
-                copy.querySelector('.id').innerText = seller.sellerId
-                copy.querySelector('.firstName').innerText = seller.firstName
-                copy.querySelector('.lastName').innerText = seller.lastName
-                copy.querySelector('.phone').innerText = seller.phone
-                copy.querySelector('.email').innerText = seller.email
+                copy.querySelector('.id').innerText = seller.sellerId ?? ''
+                copy.querySelector('.firstName').innerText = seller.firstName ?? ''
+                copy.querySelector('.lastName').innerText = seller.lastName ?? ''
+                copy.querySelector('.email').innerText = seller.email ?? ''
+                copy.querySelector('.phone').innerText = seller.phone ?? ''
                 copy.querySelector('.edit').href = '/edit/seller.html?id=' + seller.sellerId
-
-                copy.querySelector('.delete').addEventListener('click', () => {
-                    axios.delete('/api/seller/' + seller.sellerId)
-                        .then(() => window.location.reload())
-                        .catch(() => alert('Doslo je do greske'))
-                })
 
                 content.appendChild(copy)
             })
         })
-        .catch(() => alert('Doslo je do greske'))
+        .catch(err => {
+            console.error(err)
+            alert('Doslo je do greske pri ucitavanju prodavaca')
+        })
 </script>
 </body>
 </html>

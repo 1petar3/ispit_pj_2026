@@ -1,28 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oglasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 </head>
 <body data-bs-theme="dark">
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mt-2">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 mt-2">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/index.html">PolovniMini</a>
+            <a class="navbar-brand" href="/index.html">
+                <i class="fa-solid fa-car"></i> PolovniMini
+            </a>
+
             <div class="navbar-nav">
-                <a class="nav-link" href="/index.html">Početna</a>
-                <a class="nav-link active" href="/list.html">Lista</a>
-                <a class="nav-link" href="/seller.html">Prodavci</a>
-                <a class="nav-link" href="/car.html">Automobili</a>
+                <a class="nav-link" href="/index.html">
+                    <i class="fa-solid fa-house"></i> Početna
+                </a>
+                <a class="nav-link active" href="/list.html">
+                    <i class="fa-solid fa-table-cells"></i> Lista
+                </a>
+                <a class="nav-link" href="/seller.html">
+                    <i class="fa-solid fa-user"></i> Prodavci
+                </a>
+                <a class="nav-link" href="/car.html">
+                    <i class="fa-solid fa-car-side"></i> Automobili
+                </a>
             </div>
         </div>
     </nav>
 
-    <a href="/new/listing.html" class="btn btn-primary mb-3">Dodaj oglas</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Svi oglasi</h3>
+        <a href="/new/listing.html" class="btn btn-primary">Dodaj oglas</a>
+    </div>
 
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
             <th>ID</th>
@@ -49,7 +64,7 @@
         <td>
             <a href="#" class="btn btn-sm btn-primary details">Detalji</a>
             <a href="#" class="btn btn-sm btn-success edit">Izmeni</a>
-            <button class="btn btn-sm btn-warning sold">Prodato</button>
+            <button class="btn btn-sm btn-warning toggle-status"></button>
             <button class="btn btn-sm btn-danger delete">Obriši</button>
         </td>
     </tr>
@@ -71,17 +86,35 @@
                 copy.querySelector('.seller').innerText = getSellerTitle(listing)
                 copy.querySelector('.price').innerText = formatPrice(listing.priceEur)
                 copy.querySelector('.city').innerText = listing.city
-                copy.querySelector('.status').innerText = listing.status
+                copy.querySelector('.status').innerHTML = getListingStatusBadge(listing)
                 copy.querySelector('.details').href = '/listing.html?id=' + listing.listingId
                 copy.querySelector('.edit').href = '/edit/listing.html?id=' + listing.listingId
 
-                copy.querySelector('.sold').addEventListener('click', () => {
-                    axios.put('/api/listing/' + listing.listingId + '/sold')
-                        .then(() => window.location.reload())
-                        .catch(() => alert('Doslo je do greske'))
-                })
+                const toggleButton = copy.querySelector('.toggle-status')
+
+                if (listing.sold === true) {
+                    toggleButton.innerText = 'Aktiviraj'
+                    toggleButton.addEventListener('click', () => {
+                        axios.put('/api/listing/' + listing.listingId + '/activate')
+                            .then(() => window.location.reload())
+                            .catch(() => alert('Doslo je do greske'))
+                    })
+                } else {
+                    toggleButton.innerText = 'Prodato'
+                    toggleButton.addEventListener('click', () => {
+                        axios.put('/api/listing/' + listing.listingId + '/sold')
+                            .then(() => window.location.reload())
+                            .catch(() => alert('Doslo je do greske'))
+                    })
+                }
 
                 copy.querySelector('.delete').addEventListener('click', () => {
+                    const confirmed = confirm('Da li ste sigurni da želite da obrišete oglas?')
+
+                    if (!confirmed) {
+                        return
+                    }
+
                     axios.delete('/api/listing/' + listing.listingId)
                         .then(() => window.location.reload())
                         .catch(() => alert('Doslo je do greske'))
@@ -90,7 +123,10 @@
                 content.appendChild(copy)
             })
         })
-        .catch(() => alert('Doslo je do greske'))
+        .catch(err => {
+            console.error(err)
+            alert('Doslo je do greske pri ucitavanju oglasa')
+        })
 </script>
 </body>
 </html>

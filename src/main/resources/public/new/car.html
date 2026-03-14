@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,44 +14,32 @@
         </div>
     </nav>
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
-            <li class="breadcrumb-item"><a href="/car.html">Automobili</a></li>
-            <li class="breadcrumb-item active">Dodaj</li>
-        </ol>
-    </nav>
-
     <h3>Dodaj auto</h3>
 
     <form id="form">
         <div class="mb-3">
             <label for="make" class="form-label">Marka:</label>
-            <input type="text" class="form-control" id="make">
+            <input type="text" class="form-control" id="make" required>
         </div>
+
         <div class="mb-3">
             <label for="model" class="form-label">Model:</label>
-            <input type="text" class="form-control" id="model">
+            <input type="text" class="form-control" id="model" required>
         </div>
+
         <div class="mb-3">
             <label for="year" class="form-label">Godište:</label>
-            <input type="number" class="form-control" id="year">
+            <input type="number" class="form-control" id="year" required>
         </div>
-        <div class="mb-3">
-            <label for="mileageKm" class="form-label">Kilometraža:</label>
-            <input type="number" class="form-control" id="mileageKm">
-        </div>
+
         <div class="mb-3">
             <label for="fuelType" class="form-label">Gorivo:</label>
-            <input type="text" class="form-control" id="fuelType">
+            <input type="text" class="form-control" id="fuelType" required>
         </div>
+
         <div class="mb-3">
-            <label for="transmission" class="form-label">Menjač:</label>
-            <input type="text" class="form-control" id="transmission">
-        </div>
-        <div class="mb-3">
-            <label for="engine" class="form-label">Motor:</label>
-            <input type="text" class="form-control" id="engine">
+            <label for="mileageKm" class="form-label">Kilometraža:</label>
+            <input type="number" class="form-control" id="mileageKm" required>
         </div>
 
         <button type="submit" class="btn btn-success">Sačuvaj</button>
@@ -63,15 +51,40 @@
     document.getElementById('form').addEventListener('submit', e => {
         e.preventDefault()
 
+        const make = document.getElementById('make').value.trim()
+        const model = document.getElementById('model').value.trim()
+        const year = parseInt(document.getElementById('year').value)
+        const fuelType = document.getElementById('fuelType').value.trim()
+        const mileageKm = parseInt(document.getElementById('mileageKm').value)
+
+        if (make.length < 2) {
+            alert('Marka mora imati najmanje 2 karaktera.')
+            return
+        }
+
+        if (model.length < 1) {
+            alert('Model ne sme biti prazan.')
+            return
+        }
+
+        if (!year || year < 1950) {
+            alert('Godište nije ispravno.')
+            return
+        }
+
+        if (!mileageKm || mileageKm < 0) {
+            alert('Kilometraža nije ispravna.')
+            return
+        }
+
         axios.post('/api/car', {
-            make: document.getElementById('make').value,
-            model: document.getElementById('model').value,
-            year: parseInt(document.getElementById('year').value),
-            mileageKm: parseInt(document.getElementById('mileageKm').value),
-            fuelType: document.getElementById('fuelType').value,
-            transmission: document.getElementById('transmission').value,
-            engine: document.getElementById('engine').value
+            make: make,
+            model: model,
+            year: year,
+            fuelType: fuelType,
+            mileageKm: mileageKm
         }).then(() => {
+            alert('Automobil je uspešno sačuvan.')
             window.location.href = '/car.html'
         }).catch(() => alert('Doslo je do greske'))
     })

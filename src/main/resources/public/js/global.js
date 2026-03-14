@@ -1,5 +1,6 @@
 function formatDate(iso) {
     if (iso == null) return 'N/A'
+
     return new Date(iso).toLocaleString('sr-RS', {
         year: '2-digit',
         month: '2-digit',
@@ -16,12 +17,35 @@ function formatPrice(price) {
 
 function getListingTitle(listing) {
     if (listing == null || listing.car == null) return 'N/A'
-    return listing.car.make + ' ' + listing.car.model
+    return (listing.car.make ?? '') + ' ' + (listing.car.model ?? '')
 }
 
 function getSellerTitle(listing) {
     if (listing == null || listing.seller == null) return 'N/A'
-    return listing.seller.firstName + ' ' + listing.seller.lastName
+    return (listing.seller.firstName ?? '') + ' ' + (listing.seller.lastName ?? '')
+}
+
+function getListingStatusText(listing) {
+    if (listing == null) return 'N/A'
+    if (listing.sold === true) return 'PRODAT'
+    if (listing.active === true) return 'AKTIVAN'
+    return 'NEAKTIVAN'
+}
+
+function getListingStatusBadge(listing) {
+    if (listing == null) {
+        return '<span class="badge text-bg-secondary">N/A</span>'
+    }
+
+    if (listing.sold === true) {
+        return '<span class="badge text-bg-danger">PRODAT</span>'
+    }
+
+    if (listing.active === true) {
+        return '<span class="badge text-bg-success">AKTIVAN</span>'
+    }
+
+    return '<span class="badge text-bg-secondary">NEAKTIVAN</span>'
 }
 
 function getIdFromQuery() {

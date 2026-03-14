@@ -37,13 +37,13 @@ public class Listing {
     private String city;
 
     @Column(nullable = false)
-    private String status; // ACTIVE / SOLD / ARCHIVED
+    private Boolean active;
 
-    @Column(name = "published_at")
+    @Column(nullable = false)
+    private Boolean sold;
+
+    @Column(name = "published_at", nullable = false)
     private LocalDateTime publishedAt;
-
-    @Column(name = "sold_at")
-    private LocalDateTime soldAt;
 
     @Column(columnDefinition = "text")
     private String description;

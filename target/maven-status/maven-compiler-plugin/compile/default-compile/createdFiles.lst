@@ -9,6 +9,7 @@ rs\ac\singidunum\entity\Seller.class
 rs\ac\singidunum\controller\ListingController.class
 rs\ac\singidunum\repo\CarRepository.class
 rs\ac\singidunum\controller\CarController.class
+rs\ac\singidunum\controller\HomeController.class
 rs\ac\singidunum\entity\Car.class
 rs\ac\singidunum\service\ListingService.class
 rs\ac\singidunum\service\CarService.class

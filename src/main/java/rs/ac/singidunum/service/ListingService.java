@@ -29,6 +29,14 @@ public class ListingService {
         return listingRepository.findAllByDeletedAtIsNull();
     }
 
+    public List<Listing> getActiveListings() {
+        return listingRepository.findAllByDeletedAtIsNullAndActiveTrue();
+    }
+
+    public List<Listing> getSoldListings() {
+        return listingRepository.findAllByDeletedAtIsNullAndSoldTrue();
+    }
+
     public Optional<Listing> getListingById(Integer id) {
         return listingRepository.findByListingIdAndDeletedAtIsNull(id);
     }
@@ -43,16 +51,14 @@ public class ListingService {
         Listing listing = new Listing();
         listing.setListingId(null);
         listing.setUuid(UUID.randomUUID().toString());
-
         listing.setSeller(seller);
         listing.setCar(car);
         listing.setPriceEur(model.getPriceEur());
         listing.setCity(model.getCity());
-        listing.setStatus(model.getStatus() == null || model.getStatus().isBlank() ? "ACTIVE" : model.getStatus());
+        listing.setActive(true);
+        listing.setSold(false);
+        listing.setPublishedAt(LocalDateTime.now());
         listing.setDescription(model.getDescription());
-        listing.setPublishedAt(model.getPublishedAt());
-
-        listing.setSoldAt(null);
         listing.setCreatedAt(LocalDateTime.now());
         listing.setUpdatedAt(null);
         listing.setDeletedAt(null);
@@ -70,13 +76,20 @@ public class ListingService {
         Car car = carRepository.findByCarIdAndDeletedAtIsNull(model.getCarId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        Boolean active = model.getActive() == null ? listing.getActive() : model.getActive();
+        Boolean sold = model.getSold() == null ? listing.getSold() : model.getSold();
+
+        if (Boolean.TRUE.equals(sold)) {
+            active = false;
+        }
+
         listing.setSeller(seller);
         listing.setCar(car);
         listing.setPriceEur(model.getPriceEur());
         listing.setCity(model.getCity());
-        listing.setStatus(model.getStatus() == null || model.getStatus().isBlank() ? listing.getStatus() : model.getStatus());
+        listing.setActive(active);
+        listing.setSold(sold);
         listing.setDescription(model.getDescription());
-        listing.setPublishedAt(model.getPublishedAt() == null ? listing.getPublishedAt() : model.getPublishedAt());
         listing.setUpdatedAt(LocalDateTime.now());
 
         return listingRepository.save(listing);
@@ -86,8 +99,19 @@ public class ListingService {
         Listing listing = listingRepository.findByListingIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        listing.setStatus("SOLD");
-        listing.setSoldAt(LocalDateTime.now());
+        listing.setSold(true);
+        listing.setActive(false);
+        listing.setUpdatedAt(LocalDateTime.now());
+
+        return listingRepository.save(listing);
+    }
+
+    public Listing activateListing(Integer id) {
+        Listing listing = listingRepository.findByListingIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        listing.setSold(false);
+        listing.setActive(true);
         listing.setUpdatedAt(LocalDateTime.now());
 
         return listingRepository.save(listing);
@@ -99,6 +123,7 @@ public class ListingService {
 
         listing.setDeletedAt(LocalDateTime.now());
         listing.setUpdatedAt(LocalDateTime.now());
+
         listingRepository.save(listing);
     }
 }

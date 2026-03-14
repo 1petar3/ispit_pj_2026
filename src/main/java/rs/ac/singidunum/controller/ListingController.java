@@ -23,6 +23,16 @@ public class ListingController {
         return service.getListings();
     }
 
+    @GetMapping(path = "/active")
+    public List<Listing> getActiveListings() {
+        return service.getActiveListings();
+    }
+
+    @GetMapping(path = "/sold")
+    public List<Listing> getSoldListings() {
+        return service.getSoldListings();
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<Listing> getListingById(@PathVariable Integer id) {
         return ResponseEntity.of(service.getListingById(id));
@@ -41,6 +51,11 @@ public class ListingController {
     @PutMapping(path = "/{id}/sold")
     public Listing sellListing(@PathVariable Integer id) {
         return service.sellListing(id);
+    }
+
+    @PutMapping(path = "/{id}/activate")
+    public Listing activateListing(@PathVariable Integer id) {
+        return service.activateListing(id);
     }
 
     @DeleteMapping(path = "/{id}")
