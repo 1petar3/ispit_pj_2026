@@ -6,8 +6,9 @@ import rs.ac.singidunum.entity.Seller;
 import java.util.List;
 import java.util.Optional;
 
-public interface SellerRepository extends JpaRepository <Seller, Integer>
-{
+public interface SellerRepository extends JpaRepository<Seller, Integer> {
+
     List<Seller> findAllByDeletedAtIsNull();
-    Optional<Seller>findBySellerIdAndDeletedAtIsNull(Integer sellerId);
+
+    Optional<Seller> findBySellerIdAndDeletedAtIsNull(Integer sellerId);
 }

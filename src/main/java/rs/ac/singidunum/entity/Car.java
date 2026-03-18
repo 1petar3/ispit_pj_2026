@@ -1,11 +1,6 @@
 package rs.ac.singidunum.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +20,9 @@ public class Car {
     private Integer carId;
 
     @Column(nullable = false)
+    private String uuid;
+
+    @Column(nullable = false)
     private String make;
 
     @Column(nullable = false)
@@ -36,12 +34,13 @@ public class Car {
     @Column(name = "mileage_km", nullable = false)
     private Integer mileageKm;
 
-    @Column(name = "fuel_type", nullable = false)
+    @Column(name = "fuel_type")
     private String fuelType;
 
-    @Column(nullable = false)
+    @Column
     private String transmission;
 
+    @Column
     private String engine;
 
     @Column(name = "created_at", nullable = false)

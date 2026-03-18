@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.singidunum.entity.Car;
+import rs.ac.singidunum.model.CarModel;
 import rs.ac.singidunum.repo.CarRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +27,25 @@ public class CarService {
         return carRepository.findByCarIdAndDeletedAtIsNull(id);
     }
 
-    public Car createCar(Car model) {
-        model.setCarId(null);
-        model.setCreatedAt(LocalDateTime.now());
-        model.setUpdatedAt(null);
-        model.setDeletedAt(null);
-        return carRepository.save(model);
+    public Car createCar(CarModel model) {
+        Car car = new Car();
+        car.setCarId(null);
+        car.setUuid(UUID.randomUUID().toString());
+        car.setMake(model.getMake());
+        car.setModel(model.getModel());
+        car.setYear(model.getYear());
+        car.setMileageKm(model.getMileageKm());
+        car.setFuelType(model.getFuelType());
+        car.setTransmission(model.getTransmission());
+        car.setEngine(model.getEngine());
+        car.setCreatedAt(LocalDateTime.now());
+        car.setUpdatedAt(null);
+        car.setDeletedAt(null);
+
+        return carRepository.save(car);
     }
 
-    public Car updateCar(Integer id, Car model) {
+    public Car updateCar(Integer id, CarModel model) {
         Car car = carRepository.findByCarIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -55,6 +67,7 @@ public class CarService {
 
         car.setDeletedAt(LocalDateTime.now());
         car.setUpdatedAt(LocalDateTime.now());
+
         carRepository.save(car);
     }
 }

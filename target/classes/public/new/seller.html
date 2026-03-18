@@ -8,36 +8,40 @@
 </head>
 <body data-bs-theme="dark">
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3 mt-2">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/index.html">PolovniMini</a>
-        </div>
-    </nav>
-
-    <h3>Dodaj prodavca</h3>
+    <h3 class="mt-3 mb-3">Dodaj prodavca</h3>
 
     <form id="form">
         <div class="mb-3">
-            <label for="firstName" class="form-label">Ime:</label>
-            <input type="text" class="form-control" id="firstName" required>
+            <label class="form-label" for="firstName">Ime</label>
+            <input class="form-control" type="text" id="firstName" required>
         </div>
 
         <div class="mb-3">
-            <label for="lastName" class="form-label">Prezime:</label>
-            <input type="text" class="form-control" id="lastName" required>
+            <label class="form-label" for="lastName">Prezime</label>
+            <input class="form-control" type="text" id="lastName" required>
         </div>
 
         <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="email" required>
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" type="email" id="email" required>
         </div>
 
         <div class="mb-3">
-            <label for="phone" class="form-label">Telefon:</label>
-            <input type="text" class="form-control" id="phone" required>
+            <label class="form-label" for="phone">Telefon</label>
+            <input class="form-control" type="text" id="phone" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Sačuvaj</button>
+        <div class="mb-3">
+            <label class="form-label" for="umcn">JMBG</label>
+            <input class="form-control" type="text" id="umcn">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="taxId">PIB</label>
+            <input class="form-control" type="text" id="taxId">
+        </div>
+
+        <button class="btn btn-success" type="submit">Sačuvaj</button>
     </form>
 </div>
 
@@ -46,33 +50,14 @@
     document.getElementById('form').addEventListener('submit', e => {
         e.preventDefault()
 
-        const firstName = document.getElementById('firstName').value.trim()
-        const lastName = document.getElementById('lastName').value.trim()
-        const email = document.getElementById('email').value.trim()
-        const phone = document.getElementById('phone').value.trim()
-
-        if (firstName.length < 2) {
-            alert('Ime mora imati najmanje 2 karaktera.')
-            return
-        }
-
-        if (lastName.length < 2) {
-            alert('Prezime mora imati najmanje 2 karaktera.')
-            return
-        }
-
-        if (phone.length < 3) {
-            alert('Telefon nije ispravan.')
-            return
-        }
-
         axios.post('/api/seller', {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            umcn: document.getElementById('umcn').value.trim(),
+            taxId: document.getElementById('taxId').value.trim()
         }).then(() => {
-            alert('Prodavac je uspešno sačuvan.')
             window.location.href = '/seller.html'
         }).catch(() => alert('Doslo je do greske'))
     })

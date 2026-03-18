@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.singidunum.entity.Car;
+import rs.ac.singidunum.model.CarModel;
 import rs.ac.singidunum.service.CarService;
 
 import java.util.List;
@@ -28,12 +29,12 @@ public class CarController {
     }
 
     @PostMapping
-    public Car saveCar(@RequestBody Car model) {
+    public Car saveCar(@RequestBody CarModel model) {
         return service.createCar(model);
     }
 
     @PutMapping(path = "/{id}")
-    public Car updateCar(@PathVariable Integer id, @RequestBody Car model) {
+    public Car updateCar(@PathVariable Integer id, @RequestBody CarModel model) {
         return service.updateCar(id, model);
     }
 

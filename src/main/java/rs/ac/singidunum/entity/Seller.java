@@ -19,6 +19,9 @@ public class Seller {
     @Column(name = "seller_id")
     private Integer sellerId;
 
+    @Column(nullable = false)
+    private String uuid;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -31,10 +34,10 @@ public class Seller {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column
     private String umcn;
 
-    @Column(name = "tax_id", nullable = false)
+    @Column(name = "tax_id")
     private String taxId;
 
     @Column(name = "created_at", nullable = false)

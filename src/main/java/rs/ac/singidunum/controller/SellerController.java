@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.singidunum.entity.Seller;
+import rs.ac.singidunum.model.SellerModel;
 import rs.ac.singidunum.service.SellerService;
 
 import java.util.List;
@@ -28,12 +29,12 @@ public class SellerController {
     }
 
     @PostMapping
-    public Seller saveSeller(@RequestBody Seller model) {
+    public Seller saveSeller(@RequestBody SellerModel model) {
         return service.createSeller(model);
     }
 
     @PutMapping(path = "/{id}")
-    public Seller updateSeller(@PathVariable Integer id, @RequestBody Seller model) {
+    public Seller updateSeller(@PathVariable Integer id, @RequestBody SellerModel model) {
         return service.updateSeller(id, model);
     }
 

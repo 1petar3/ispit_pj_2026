@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.singidunum.entity.Seller;
+import rs.ac.singidunum.model.SellerModel;
 import rs.ac.singidunum.repo.SellerRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +27,24 @@ public class SellerService {
         return sellerRepository.findBySellerIdAndDeletedAtIsNull(id);
     }
 
-    public Seller createSeller(Seller model) {
-        model.setSellerId(null);
-        model.setCreatedAt(LocalDateTime.now());
-        model.setUpdatedAt(null);
-        model.setDeletedAt(null);
-        return sellerRepository.save(model);
+    public Seller createSeller(SellerModel model) {
+        Seller seller = new Seller();
+        seller.setSellerId(null);
+        seller.setUuid(UUID.randomUUID().toString());
+        seller.setFirstName(model.getFirstName());
+        seller.setLastName(model.getLastName());
+        seller.setEmail(model.getEmail());
+        seller.setPhone(model.getPhone());
+        seller.setUmcn(model.getUmcn());
+        seller.setTaxId(model.getTaxId());
+        seller.setCreatedAt(LocalDateTime.now());
+        seller.setUpdatedAt(null);
+        seller.setDeletedAt(null);
+
+        return sellerRepository.save(seller);
     }
 
-    public Seller updateSeller(Integer id, Seller model) {
+    public Seller updateSeller(Integer id, SellerModel model) {
         Seller seller = sellerRepository.findBySellerIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -54,6 +65,7 @@ public class SellerService {
 
         seller.setDeletedAt(LocalDateTime.now());
         seller.setUpdatedAt(LocalDateTime.now());
+
         sellerRepository.save(seller);
     }
 }
